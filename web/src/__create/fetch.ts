@@ -9,10 +9,12 @@ const safeStringify = (value: unknown) =>
     return v;
   });
 
-const postToParent = (level: string, text: string, extra: unknown) => {
+const postToParent = (level: keyof Console, text: string, extra: unknown) => {
   try {
     if (isBackend() || !window.parent || window.parent === window) {
-      ('level' in console ? console[level] : console.log)(text, extra);
+      (typeof console[level] === 'function'
+        ? (console[level] as (...args: unknown[]) => void)
+        : console.log)(text, extra);
       return;
     }
     window.parent.postMessage(
@@ -43,8 +45,8 @@ const getURlFromArgs = (...args: Parameters<typeof originalFetch>): string => {
     'host' in urlArg &&
     'pathname' in urlArg
   ) {
-    // @ts-expect-error: We expect urlArg to have these properties in some cases
-    url = `${urlArg.protocol}//${urlArg.host}${urlArg.pathname}`;
+    const customUrlArg = urlArg as { protocol: string; host: string; pathname: string };
+    url = `${customUrlArg.protocol}//${customUrlArg.host}${customUrlArg.pathname}`;
   } else {
     throw new Error('Invalid argument passed to fetch');
   }
@@ -88,13 +90,13 @@ export const fetchWithHeaders = async function fetchWithHeaders(
   }
 
   try {
-  const result = await originalFetch(
-    input,
-    {
-      ...init,
-      headers: finalHeaders,
-    }
-  );
+    const result = await originalFetch(
+      input,
+      {
+        ...init,
+        headers: finalHeaders,
+      }
+    );
     if (!result.ok) {
       postToParent(
         'error',

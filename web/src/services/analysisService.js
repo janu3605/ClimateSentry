@@ -94,8 +94,8 @@ export class ClimateRiskService {
    */
   async getWeatherData(lat, lng) {
     // Fetch live weather data from OpenWeatherMap
-    const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+  const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('Failed to fetch weather data');
     const data = await res.json();
@@ -197,8 +197,8 @@ export class ClimateRiskService {
    */
   async analyzePollutionRisk(area, lat, lng) {
     // Fetch live AQI data from AQICN
-    const apiKey = process.env.REACT_APP_AQICN_API_KEY;
-    const url = `https://api.waqi.info/feed/geo:${lat};${lng}/?token=${apiKey}`;
+  const apiKey = import.meta.env.VITE_AQICN_API_KEY;
+  const url = `https://api.waqi.info/feed/geo:${lat};${lng}/?token=${apiKey}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('Failed to fetch AQI data');
     const data = await res.json();
