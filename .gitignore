@@ -1,0 +1,65 @@
+# Node
+node_modules/
+.npm/
+.npmrc
+npm-debug.log*
+
+# Build output
+dist/
+build/
+.vite/
+.vitest/
+coverage/
+
+# System
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+*.bak
+*.tmp
+
+# Misc
+*.tgz
+*.zip
+*.tar.gz
+
+# Patch files
+patches/
+
+# Expo/React Native
+.expo/
+.expo-shared/
+web-build/
+
+# Test
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local caches
+caches/
+
+# Others
+*.local
+*.lock
+bun.lockb
