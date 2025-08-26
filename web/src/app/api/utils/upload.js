@@ -3,9 +3,10 @@ async function upload({
   buffer,
   base64
 }) {
-  // ...removed Create.xyz upload endpoint...
+// ...removed Create.xyz upload endpoint...
+const response = await fetch(url, {
   method: "POST",
-    headers: {
+  headers: {
     "Content-Type": buffer ? "application/octet-stream" : "application/json"
   },
   body: buffer ? buffer : JSON.stringify({ base64, url })

@@ -23,9 +23,9 @@ import './global.css';
 
 // If the fetch polyfill exists locally, use a relative path:
 import fetch from '../__create/fetch';
-// ...removed SessionProvider import...
+import { SessionProvider } from 'next-auth/react'; // or the correct path/package for your project
 import { useNavigate } from 'react-router';
-import serializeError from 'serialize-error';
+import { serializeError } from 'serialize-error';
 import { Toaster } from 'sonner';
 // @ts-ignore
 import { LoadFonts } from 'virtual:load-fonts.jsx';
@@ -99,15 +99,15 @@ export function ErrorBoundary({ error }: Route["ErrorBoundaryProps"]) {
   return <SharedErrorBoundary isOpen={true} />;
 }
 
-function InternalErrorBoundary({ error: errorArg }: Route.ErrorBoundaryProps) {
+function InternalErrorBoundary({ error: errorArg }: Route["ErrorBoundaryProps"]) {
   const routeError = useRouteError();
   const asyncError = useAsyncError();
   const error = errorArg ?? asyncError ?? routeError;
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
+    useEffect(() => {
             // Removed SessionProvider import
-    return () => clearTimeout(animateTimer);
+    // No cleanup needed here
   }, []);
   const { buttonProps: showLogsButtonProps } = useButton(
     {
@@ -126,7 +126,10 @@ function InternalErrorBoundary({ error: errorArg }: Route.ErrorBoundaryProps) {
     {
       onPress: useCallback(() => {
         window.parent.postMessage(
-              return <Outlet />;
+          {
+            type: 'sandbox:web:fix',
+          },
+          '*'
         );
         setIsOpen(false);
       }, [error]),
@@ -262,9 +265,11 @@ export function useHmrConnection(): boolean {
     import.meta.hot.on('vite:beforeFullReload', onFullReload);
 
     return () => {
-      import.meta.hot?.off('vite:ws:disconnect', onDisconnect);
-      import.meta.hot?.off('vite:ws:connect', onConnect);
-      import.meta.hot?.off('vite:beforeFullReload', onFullReload);
+      if (import.meta.hot) {
+        import.meta.hot.off('vite:ws:disconnect', onDisconnect);
+        import.meta.hot.off('vite:ws:connect', onConnect);
+        import.meta.hot.off('vite:beforeFullReload', onFullReload);
+      }
     };
   }, []);
 
